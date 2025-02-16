@@ -17,5 +17,13 @@ public abstract class Usuario {
         this.password = password;
     }
 
+    public String getNombreUsuario() { return nombreUsuario; }
+    public String getNombreCompleto() { return nombreCompleto; }
+    public String getCedulaIdentidad() { return cedulaIdentidad; }
+    public String getFechaNacimiento() { return fechaNacimiento; }
+    public String getCorreoElectronico() { return correoElectronico; }
+    public String getPassword() { return password; }
+
     public abstract void mostrarInformacion();
 }
+
