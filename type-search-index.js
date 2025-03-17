@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"CapaLogica","l":"Administrador"},{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"CapaLogica","l":"Comprador"},{"p":"CapaInterfazGrafica","l":"Main"},{"p":"CapaLogica","l":"Pedido"},{"p":"CapaLogica","l":"Producto"},{"p":"CapaLogica","l":"Usuario"},{"p":"CapaLogica","l":"Vendedor"}];updateSearchResults();
