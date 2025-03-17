@@ -1,5 +1,9 @@
 package CapaLogica;
 
+/**
+ * Representa un producto en la tienda.
+ */
+
 public class Producto {
     private String nombre;
     private String categoria;
