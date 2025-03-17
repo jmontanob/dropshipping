@@ -1,5 +1,9 @@
 package CapaLogica;
 
+/**
+  Representa un vendedor en la tienda.
+  No hereda de Usuario, ya que tiene atributos distintos y no requiere autenticación.
+ **/
 public class Vendedor {
     private String nombre;
     private String ubicacion;
@@ -18,6 +22,9 @@ public class Vendedor {
     public String getCorreoContacto() { return correoContacto; }
     public String getNumeroTelefono() { return numeroTelefono; }
 
+    /**
+      Devuelve una representación en texto del vendedor.
+     **/
     @Override
     public String toString() {
         return "Vendedor: " + nombre + " - " + ubicacion;
