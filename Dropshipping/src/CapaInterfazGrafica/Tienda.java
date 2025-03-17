@@ -6,6 +6,10 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Interfaz gráfica para la gestión de productos.
+ */
+
 class TiendaUI {
     private JFrame frame;
     private DefaultListModel<String> listModel;

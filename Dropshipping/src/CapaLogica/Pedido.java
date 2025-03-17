@@ -3,6 +3,10 @@ package CapaLogica;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa un pedido realizado en la tienda.
+ */
+
 public class Pedido {
     private int idPedido;
     private Comprador cliente;
