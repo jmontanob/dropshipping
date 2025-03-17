@@ -1,5 +1,9 @@
 package CapaLogica;
 
+/**
+  Clase abstracta base para los usuarios de la tienda.
+  Define atributos comunes a todos los usuarios y un método abstracto.
+ **/
 public abstract class Usuario {
     protected String nombreUsuario;
     protected String nombreCompleto;
@@ -24,6 +28,10 @@ public abstract class Usuario {
     public String getCorreoElectronico() { return correoElectronico; }
     public String getPassword() { return password; }
 
+    /**
+      Método abstracto que debe ser implementado por las clases hijas.
+      Su propósito es mostrar información específica del usuario.
+     **/
     public abstract void mostrarInformacion();
 }
 
