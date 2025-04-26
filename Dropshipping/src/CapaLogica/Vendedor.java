@@ -1,25 +1,12 @@
 package CapaLogica;
 
-public class Vendedor {
-    private String nombre;
-    private String ubicacion;
-    private String correoContacto;
-    private String numeroTelefono;
-
-    public Vendedor(String nombre, String ubicacion, String correoContacto, String numeroTelefono) {
-        this.nombre = nombre;
-        this.ubicacion = ubicacion;
-        this.correoContacto = correoContacto;
-        this.numeroTelefono = numeroTelefono;
+public class Vendedor extends Usuario {
+    public Vendedor(String nombreUsuario, String nombreCompleto, String cedulaIdentidad, String fechaNacimiento, String correoElectronico, String password) {
+        super(nombreUsuario, nombreCompleto, cedulaIdentidad, fechaNacimiento, correoElectronico, password);
     }
 
-    public String getNombre() { return nombre; }
-    public String getUbicacion() { return ubicacion; }
-    public String getCorreoContacto() { return correoContacto; }
-    public String getNumeroTelefono() { return numeroTelefono; }
-
     @Override
-    public String toString() {
-        return "Vendedor: " + nombre + " - " + ubicacion;
+    public void mostrarInformacion() {
+        System.out.println("Comprador: " + nombreCompleto + " - " + correoElectronico);
     }
 }
