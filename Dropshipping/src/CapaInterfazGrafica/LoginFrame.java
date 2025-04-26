@@ -1,11 +1,11 @@
 package CapaInterfazGrafica;
 
 import CapaLogica.*;
+import CapaDAO.DAOUsuario;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLException;
 
 public class LoginFrame extends JFrame {
 
@@ -17,9 +17,6 @@ public class LoginFrame extends JFrame {
 
     private GestorProductos gestorProductos;
     private GestorPedidos gestorPedidos;
-
-    // Simulated user database: Map<username, password|role>
-    private Map<String, String[]> userData = new HashMap<>();
 
     public LoginFrame(GestorProductos gestorProductos, GestorPedidos gestorPedidos) {
         this.gestorProductos = gestorProductos;
@@ -63,33 +60,40 @@ public class LoginFrame extends JFrame {
         btnRegister.setBounds(200, 160, 130, 30);
         add(btnRegister);
 
-        // Dummy user for testing
-        userData.put("admin", new String[]{"admin123", "Administrador"});
-        userData.put("vendedor", new String[]{"vend123", "Vendedor"});
-        userData.put("cliente", new String[]{"cli123", "Comprador"});
-
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String user = txtUsername.getText().trim();
                 String pass = new String(txtPassword.getPassword());
                 String selectedRole = (String) roleSelector.getSelectedItem();
 
-                if (userData.containsKey(user)) {
-                    String[] userInfo = userData.get(user);
-                    if (userInfo[0].equals(pass) && userInfo[1].equals(selectedRole)) {
-                        openMenu(selectedRole);
+                try {
+                    DAOUsuario daoUsuario = new DAOUsuario();
+                    Usuario usuario = daoUsuario.buscarUsuario(user);
+
+                    if (usuario != null) {
+                        String rolUsuario = daoUsuario.obtenerRolUsuario(user);
+
+                        if (usuario.getPassword().equals(pass) && rolUsuario.equals(selectedRole)) {
+                            daoUsuario.cerrarConexion();
+                            openMenu(rolUsuario);
+                        } else {
+                            daoUsuario.cerrarConexion();
+                            JOptionPane.showMessageDialog(null, "Contraseña o rol incorrecto.");
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Contraseña o rol incorrecto.");
+                        daoUsuario.cerrarConexion();
+                        JOptionPane.showMessageDialog(null, "Usuario no registrado.");
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Usuario no registrado.");
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error al conectar con la base de datos.");
                 }
             }
         });
 
         btnRegister.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                RegistroFrame registroFrame = new RegistroFrame(gestorProductos, gestorPedidos, userData);
+                RegistroFrame registroFrame = new RegistroFrame(gestorProductos, gestorPedidos);
                 registroFrame.setVisible(true);
             }
         });

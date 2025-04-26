@@ -1,10 +1,11 @@
 package CapaInterfazGrafica;
 
 import CapaLogica.*;
+import CapaDAO.DAOUsuario;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.Map;
+import java.sql.SQLException;
 
 public class RegistroFrame extends JFrame {
 
@@ -19,12 +20,10 @@ public class RegistroFrame extends JFrame {
 
     private GestorProductos gestorProductos;
     private GestorPedidos gestorPedidos;
-    private Map<String, String[]> userData;
 
-    public RegistroFrame(GestorProductos gestorProductos, GestorPedidos gestorPedidos, Map<String, String[]> userData) {
+    public RegistroFrame(GestorProductos gestorProductos, GestorPedidos gestorPedidos) {
         this.gestorProductos = gestorProductos;
         this.gestorPedidos = gestorPedidos;
-        this.userData = userData;
 
         setTitle("Registro de Usuario");
         setSize(400, 400);
@@ -93,11 +92,6 @@ public class RegistroFrame extends JFrame {
                     return;
                 }
 
-                if (userData.containsKey(usuario)) {
-                    JOptionPane.showMessageDialog(null, "El usuario ya existe.");
-                    return;
-                }
-
                 Usuario nuevoUsuario = null;
                 switch (rol) {
                     case "Administrador":
@@ -111,10 +105,24 @@ public class RegistroFrame extends JFrame {
                         break;
                 }
 
-                // Guardar en el mapa (puedes guardar el objeto si prefieres)
-                userData.put(usuario, new String[]{password, rol});
-                JOptionPane.showMessageDialog(null, "Usuario registrado con éxito.");
-                dispose(); // cerrar ventana de registro
+                try {
+                    DAOUsuario daoUsuario = new DAOUsuario();
+                    Usuario existente = daoUsuario.buscarUsuario(usuario);
+                    if (existente != null) {
+                        JOptionPane.showMessageDialog(null, "El usuario ya existe en la base de datos.");
+                        daoUsuario.cerrarConexion();
+                        return;
+                    }
+
+                    daoUsuario.registrarUsuario(nuevoUsuario, rol);
+                    daoUsuario.cerrarConexion();
+
+                    JOptionPane.showMessageDialog(null, "Usuario registrado con éxito.");
+                    dispose(); // cerrar ventana de registro
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error al registrar el usuario en la base de datos.");
+                }
             }
         });
     }
