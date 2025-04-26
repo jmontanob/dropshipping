@@ -1,6 +1,6 @@
 package CapaDAO;
 
-import CapaLogica.Usuario;
+import CapaLogica.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
