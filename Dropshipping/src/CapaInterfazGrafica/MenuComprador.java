@@ -1,8 +1,9 @@
 package CapaInterfazGrafica;
 
-import CapaLogica.Producto;
 import CapaLogica.GestorProductos;
 import CapaLogica.GestorPedidos;
+import CapaLogica.Producto;
+import CapaLogica.Vendedor;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +15,14 @@ import java.util.List;
  */
 public class MenuComprador extends JFrame {
 
-    public MenuComprador() {
+    private GestorProductos gestorProductos;
+    private GestorPedidos gestorPedidos;
+
+    // Constructor modificado para aceptar los parámetros
+    public MenuComprador(GestorProductos gestorProductos, GestorPedidos gestorPedidos) {
+        this.gestorProductos = gestorProductos;
+        this.gestorPedidos = gestorPedidos;
+
         setTitle("Menú Comprador");
         setSize(400, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -31,8 +39,7 @@ public class MenuComprador extends JFrame {
 
         btnVerProductos.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                GestorProductos gestor = new GestorProductos();
-                List<Producto> productos = gestor.obtenerProductos();
+                List<Producto> productos = gestorProductos.obtenerProductos();
 
                 StringBuilder listado = new StringBuilder("Productos:\n");
                 for (Producto p : productos) {
@@ -43,14 +50,6 @@ public class MenuComprador extends JFrame {
                 JOptionPane.showMessageDialog(null, listado.toString());
             }
         });
-
-        GestorProductos gestorProductos = new GestorProductos();
-        GestorPedidos gestorPedidos = new GestorPedidos();
-
-        // Carga de productos simulada
-        gestorProductos.agregarProducto("Laptop", 1000);
-        gestorProductos.agregarProducto("Mouse", 25);
-        gestorProductos.agregarProducto("Teclado", 45);
 
         JButton btnNuevoPedido = new JButton("Nuevo Pedido");
         btnNuevoPedido.setBounds(100, 110, 200, 30);

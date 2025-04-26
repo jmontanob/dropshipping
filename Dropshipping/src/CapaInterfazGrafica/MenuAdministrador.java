@@ -1,5 +1,8 @@
 package CapaInterfazGrafica;
 
+import CapaLogica.GestorPedidos;
+import CapaLogica.GestorProductos;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +12,14 @@ import java.awt.event.ActionListener;
  */
 public class MenuAdministrador extends JFrame {
 
-    public MenuAdministrador() {
+    private GestorProductos gestorProductos;
+    private GestorPedidos gestorPedidos;
+
+    // Constructor que recibe los objetos GestorProductos y GestorPedidos
+    public MenuAdministrador(GestorProductos gestorProductos, GestorPedidos gestorPedidos) {
+        this.gestorProductos = gestorProductos;
+        this.gestorPedidos = gestorPedidos;
+
         setTitle("Menú Administrador");
         setSize(400, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -30,7 +40,8 @@ public class MenuAdministrador extends JFrame {
 
         btnVerPedidos.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Aquí se mostraría la lista de pedidos (por implementar)");
+                VerPedidosFrame verPedidos = new VerPedidosFrame(gestorPedidos);
+                verPedidos.setVisible(true);
             }
         });
     }

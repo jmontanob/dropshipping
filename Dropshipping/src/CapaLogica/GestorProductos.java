@@ -17,8 +17,8 @@ public class GestorProductos {
     /**
      * Agrega un nuevo producto a la lista.
      */
-    public void agregarProducto(String nombre, double precio) {
-        productos.add(new Producto(nombre, precio));
+    public void agregarProducto(String nombre, String categoria, double precio, double peso, String dimensiones, int inventarioDisponible, Vendedor vendedor) {
+        productos.add(new Producto(nombre, categoria, precio, peso, dimensiones, inventarioDisponible, vendedor));
     }
 
     /**
