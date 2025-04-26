@@ -1,9 +1,10 @@
 package CapaInterfazGrafica;
 
 import CapaLogica.GestorPedidos;
-import CapaLogica.GestorProductos
+import CapaLogica.GestorProductos;
 import CapaLogica.Pedido;
 import CapaLogica.Producto;
+import CapaLogica.Comprador;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -20,58 +21,110 @@ public class CrearPedidoFrame extends JFrame {
 
     private JComboBox<String> comboProductos;
     private JTextArea txtCarrito;
-    private JTextField txtComprador;
+    private JTextField txtNombreUsuario, txtNombreCompleto, txtCedula, txtFechaNacimiento, txtCorreoElectronico, txtPassword;
 
     public CrearPedidoFrame(GestorProductos gestorProductos, GestorPedidos gestorPedidos) {
         this.gestorProductos = gestorProductos;
         this.gestorPedidos = gestorPedidos;
 
         setTitle("Crear Pedido");
-        setSize(500, 400);
+        setSize(500, 500);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
 
-        JLabel lblNombre = new JLabel("Nombre del comprador:");
-        lblNombre.setBounds(30, 20, 180, 25);
-        add(lblNombre);
+        // Campos para la información del comprador
+        JLabel lblNombreUsuario = new JLabel("Nombre de usuario:");
+        lblNombreUsuario.setBounds(30, 20, 180, 25);
+        add(lblNombreUsuario);
 
-        txtComprador = new JTextField();
-        txtComprador.setBounds(200, 20, 250, 25);
-        add(txtComprador);
+        txtNombreUsuario = new JTextField();
+        txtNombreUsuario.setBounds(200, 20, 250, 25);
+        add(txtNombreUsuario);
 
+        JLabel lblNombreCompleto = new JLabel("Nombre completo:");
+        lblNombreCompleto.setBounds(30, 60, 180, 25);
+        add(lblNombreCompleto);
+
+        txtNombreCompleto = new JTextField();
+        txtNombreCompleto.setBounds(200, 60, 250, 25);
+        add(txtNombreCompleto);
+
+        JLabel lblCedula = new JLabel("Cédula de identidad:");
+        lblCedula.setBounds(30, 100, 180, 25);
+        add(lblCedula);
+
+        txtCedula = new JTextField();
+        txtCedula.setBounds(200, 100, 250, 25);
+        add(txtCedula);
+
+        JLabel lblFechaNacimiento = new JLabel("Fecha de nacimiento:");
+        lblFechaNacimiento.setBounds(30, 140, 180, 25);
+        add(lblFechaNacimiento);
+
+        txtFechaNacimiento = new JTextField();
+        txtFechaNacimiento.setBounds(200, 140, 250, 25);
+        add(txtFechaNacimiento);
+
+        JLabel lblCorreoElectronico = new JLabel("Correo electrónico:");
+        lblCorreoElectronico.setBounds(30, 180, 180, 25);
+        add(lblCorreoElectronico);
+
+        txtCorreoElectronico = new JTextField();
+        txtCorreoElectronico.setBounds(200, 180, 250, 25);
+        add(txtCorreoElectronico);
+
+        JLabel lblPassword = new JLabel("Contraseña:");
+        lblPassword.setBounds(30, 220, 180, 25);
+        add(lblPassword);
+
+        txtPassword = new JTextField();
+        txtPassword.setBounds(200, 220, 250, 25);
+        add(txtPassword);
+
+        // ComboBox para seleccionar el producto
         JLabel lblProducto = new JLabel("Seleccionar producto:");
-        lblProducto.setBounds(30, 60, 180, 25);
+        lblProducto.setBounds(30, 260, 180, 25);
         add(lblProducto);
 
         comboProductos = new JComboBox<>();
         actualizarComboProductos();
-        comboProductos.setBounds(200, 60, 250, 25);
+        comboProductos.setBounds(200, 260, 250, 25);
         add(comboProductos);
 
         JButton btnAgregar = new JButton("Agregar al pedido");
-        btnAgregar.setBounds(150, 100, 180, 30);
+        btnAgregar.setBounds(150, 300, 180, 30);
         add(btnAgregar);
 
         txtCarrito = new JTextArea();
         txtCarrito.setEditable(false);
         JScrollPane scroll = new JScrollPane(txtCarrito);
-        scroll.setBounds(30, 140, 420, 150);
+        scroll.setBounds(30, 340, 420, 100);
         add(scroll);
 
         JButton btnFinalizar = new JButton("Finalizar Pedido");
-        btnFinalizar.setBounds(150, 310, 180, 30);
+        btnFinalizar.setBounds(150, 450, 180, 30);
         add(btnFinalizar);
 
+        // Acción para agregar productos al pedido
         btnAgregar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (pedido == null) {
-                    String nombreComprador = txtComprador.getText().trim();
-                    if (nombreComprador.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Por favor ingresa tu nombre.");
+                    // Crear el comprador con la información recogida
+                    String nombreUsuario = txtNombreUsuario.getText().trim();
+                    String nombreCompleto = txtNombreCompleto.getText().trim();
+                    String cedula = txtCedula.getText().trim();
+                    String fechaNacimiento = txtFechaNacimiento.getText().trim();
+                    String correoElectronico = txtCorreoElectronico.getText().trim();
+                    String password = txtPassword.getText().trim();
+
+                    if (nombreCompleto.isEmpty() || correoElectronico.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Por favor completa todos los campos.");
                         return;
                     }
-                    pedido = new Pedido(nombreComprador);
+
+                    Comprador comprador = new Comprador(nombreUsuario, nombreCompleto, cedula, fechaNacimiento, correoElectronico, password);
+                    pedido = new Pedido(comprador);
                 }
 
                 String nombreProducto = (String) comboProductos.getSelectedItem();
@@ -83,6 +136,7 @@ public class CrearPedidoFrame extends JFrame {
             }
         });
 
+        // Acción para finalizar el pedido
         btnFinalizar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (pedido == null || pedido.getProductos().isEmpty()) {

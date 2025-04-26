@@ -1,5 +1,7 @@
 package CapaInterfazGrafica;
 
+import CapaLogica.*;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +15,16 @@ public class LoginFrame extends JFrame {
     private JPasswordField txtPassword;
     private JButton btnLogin;
 
-    public LoginFrame() {
+    private GestorProductos gestorProductos;
+    private GestorPedidos gestorPedidos;
+
+    /**
+     * Constructor de LoginFrame que recibe los gestores compartidos.
+     */
+    public LoginFrame(GestorProductos gestorProductos, GestorPedidos gestorPedidos) {
+        this.gestorProductos = gestorProductos;
+        this.gestorPedidos = gestorPedidos;
+
         setTitle("Inicio de Sesión");
         setSize(350, 200);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -42,26 +53,23 @@ public class LoginFrame extends JFrame {
 
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String correo = txtCorreo.getText();
+                String correo = txtCorreo.getText().trim();
                 String password = new String(txtPassword.getPassword());
 
-                // Lógica de validación simulada (a reemplazar por lógica real)
+                // Validación de prueba (puedes conectar esto con la capa lógica real)
                 if (correo.equals("admin@tienda.com")) {
-                    new MenuAdministrador().setVisible(true);
+                    new MenuAdministrador(gestorProductos, gestorPedidos).setVisible(true);
+                    dispose();
                 } else if (correo.equals("comprador@tienda.com")) {
-                    new MenuComprador().setVisible(true);
+                    new MenuComprador(gestorProductos, gestorPedidos).setVisible(true);
+                    dispose();
                 } else if (correo.equals("vendedor@tienda.com")) {
-                    new MenuVendedor().setVisible(true);
+                    new MenuVendedor(gestorProductos, gestorPedidos).setVisible(true);
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Usuario no reconocido.");
                 }
-
-                dispose();
             }
         });
-    }
-
-    public static void main(String[] args) {
-        new LoginFrame().setVisible(true);
     }
 }
