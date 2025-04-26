@@ -1,7 +1,7 @@
 package CapaInterfazGrafica;
 
 import CapaLogica.GestorPedidos;
-import CapaLogica.GestorProductos
+import CapaLogica.GestorProductos;
 import CapaLogica.Pedido;
 import CapaLogica.Producto;
 
