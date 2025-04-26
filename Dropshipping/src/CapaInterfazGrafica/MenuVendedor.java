@@ -28,7 +28,7 @@ public class MenuVendedor extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        JLabel label = new JLabel("Bienvenido " + vendedor.getNombre(), SwingConstants.CENTER);
+        JLabel label = new JLabel("Bienvenido " + "Vendedor", SwingConstants.CENTER);
         label.setBounds(50, 20, 300, 30);
         add(label);
 
