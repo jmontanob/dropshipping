@@ -1,64 +1,32 @@
 package CapaInterfazGrafica;
-import CapaLogica.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import CapaLogica.GestorPedidos;
+import CapaLogica.GestorProductos;
+import CapaLogica.Producto;
+import CapaLogica.Vendedor;
 
 /**
- * Interfaz gráfica para la gestión de productos.
+ * Clase principal que inicia la aplicación.
  */
-
-class TiendaUI {
-    private JFrame frame;
-    private DefaultListModel<String> listModel;
-    private JList<String> productList;
-    private List<Producto> productos;
-
-    public TiendaUI() {
-        productos = new ArrayList<>();
-        frame = new JFrame("Gestión de Productos");
-        frame.setSize(500, 400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-
-        listModel = new DefaultListModel<>();
-        productList = new JList<>(listModel);
-        JScrollPane scrollPane = new JScrollPane(productList);
-        panel.add(scrollPane, BorderLayout.CENTER);
-
-        JButton addButton = new JButton("Agregar Producto");
-        addButton.addActionListener(e -> agregarProducto());
-        panel.add(addButton, BorderLayout.SOUTH);
-
-        frame.add(panel);
-        frame.setVisible(true);
-    }
-
-    private void agregarProducto() {
-        String nombre = JOptionPane.showInputDialog("Nombre del producto:");
-        String categoria = JOptionPane.showInputDialog("Categoría del producto:");
-        double precio = Double.parseDouble(JOptionPane.showInputDialog("Precio del producto:"));
-        int inventario = Integer.parseInt(JOptionPane.showInputDialog("Cantidad en inventario:"));
-
-        Producto nuevoProducto = new Producto(nombre, categoria, precio, 0, "", inventario, null);
-        productos.add(nuevoProducto);
-        actualizarLista();
-    }
-
-    private void actualizarLista() {
-        listModel.clear();
-        for (Producto p : productos) {
-            if (p.getInventarioDisponible() > 0) {
-                listModel.addElement(p.toString());
-            }
-        }
-    }
+public class TiendaUI {
 
     public static void main(String[] args) {
-        new TiendaUI();
+        // Crear gestores compartidos
+        GestorProductos gestorProductos = new GestorProductos();
+        GestorPedidos gestorPedidos = new GestorPedidos();
+
+        // Cargar productos simulados (opcional)
+        Vendedor vendedorPrueba = new Vendedor("Carlos", "Ventas Latam", "carlos@tienda.com");
+
+        gestorProductos.agregarProducto(
+                new Producto("Laptop", "Electrónica", 1000, 2.5, "35x25x2 cm", 10, vendedorPrueba)
+        );
+        gestorProductos.agregarProducto(
+                new Producto("Audífonos", "Accesorios", 50, 0.2, "15x15x5 cm", 20, vendedorPrueba)
+        );
+
+        // Iniciar el login, pasando los gestores
+        LoginFrame login = new LoginFrame(gestorProductos, gestorPedidos);
+        login.setVisible(true);
     }
 }
