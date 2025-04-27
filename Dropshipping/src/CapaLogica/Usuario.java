@@ -24,6 +24,13 @@ public abstract class Usuario {
     public String getCorreoElectronico() { return correoElectronico; }
     public String getPassword() { return password; }
 
+    public void setNombreUsuario(String nombreUsuario) { this.nombreUsuario = nombreUsuario; }
+    public void setNombreCompleto(String nombreCompleto) { this.nombreCompleto = nombreCompleto; }
+    public void setCedulaIdentidad(String cedulaIdentidad) { this.cedulaIdentidad = cedulaIdentidad; }
+    public void setFechaNacimiento(String fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+    public void setCorreoElectronico(String correoElectronico) { this.correoElectronico = correoElectronico; }
+    public void setPassword(String password) { this.password = password; }
+
     public abstract void mostrarInformacion();
 }
 

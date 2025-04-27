@@ -1,7 +1,6 @@
 package CapaInterfazGrafica;
 
-import CapaLogica.GestorPedidos;
-import CapaLogica.GestorProductos;
+import CapaLogica.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -33,6 +32,13 @@ public class MenuAdministrador extends JFrame {
         JButton btnGestionarUsuarios = new JButton("Gestionar Usuarios");
         btnGestionarUsuarios.setBounds(100, 70, 200, 30);
         add(btnGestionarUsuarios);
+
+        btnGestionarUsuarios.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GestionUsuariosFrame frame = new GestionUsuariosFrame(new GestorUsuarios());
+                frame.setVisible(true);
+            }
+        });
 
         JButton btnVerPedidos = new JButton("Ver Pedidos");
         btnVerPedidos.setBounds(100, 110, 200, 30);
