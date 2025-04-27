@@ -14,7 +14,6 @@ public class Pedido {
     private List<Producto> productos;
     private double total;
 
-    // Constructor que recibe un objeto Comprador (cuando ya esté registrado)
     public Pedido(Comprador cliente) {
         this.idPedido = contadorId++;
         this.cliente = cliente;
@@ -22,7 +21,6 @@ public class Pedido {
         this.total = 0.0;
     }
 
-    // Método para agregar productos
     public void agregarProducto(Producto producto) {
         productos.add(producto);
         total += producto.getPrecio();
@@ -33,7 +31,6 @@ public class Pedido {
     public List<Producto> getProductos() { return productos; }
     public double getTotal() { return total; }
 
-    // Método setTotal añadido
     public void setTotal(double total) {
         this.total = total;
     }

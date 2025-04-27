@@ -20,8 +20,7 @@ public class GestorPedidos {
         return daoPedido.obtenerPedidosPorComprador(nombreUsuario);  // Aquí se pasa nombreUsuario como String
     }
 
-    // Método para obtener todos los pedidos
     public List<Pedido> obtenerTodosLosPedidos() throws SQLException {
-        return daoPedido.obtenerTodosLosPedidos();  // Llamamos al método que obtendrá todos los pedidos
+        return daoPedido.obtenerTodosLosPedidos();
     }
 }

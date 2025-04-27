@@ -100,7 +100,6 @@ public class MenuComprador extends JFrame {
 
         btnVerPedidos.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Mostrar los pedidos del comprador usando el método correcto
                 List<Pedido> pedidos = null;
                 try {
                     pedidos = gestorPedidos.obtenerPedidosPorComprador(comprador.getNombreUsuario());

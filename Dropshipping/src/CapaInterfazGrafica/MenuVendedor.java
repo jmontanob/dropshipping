@@ -65,9 +65,6 @@ public class MenuVendedor extends JFrame {
         });
     }
 
-    /**
-     * Abre un diálogo para agregar un nuevo producto.
-     */
     private void agregarProducto() {
         JTextField nombreField = new JTextField();
         JTextField categoriaField = new JTextField();
