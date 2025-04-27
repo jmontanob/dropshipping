@@ -16,7 +16,7 @@ public class DAOProducto {
 
     // Agregar un nuevo producto a la base de datos
     public void agregarProducto(Producto producto) throws SQLException {
-        String sql = "INSERT INTO productos (nombre, categoria, precio, peso, dimensiones, inventarioDisponible, vendedor_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO productos (nombre, categoria, precio, peso, dimensiones, inventarioDisponible, nombreUsuarioVendedor) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, producto.getNombre());
             stmt.setString(2, producto.getCategoria());
@@ -24,7 +24,7 @@ public class DAOProducto {
             stmt.setDouble(4, producto.getPeso());
             stmt.setString(5, producto.getDimensiones());
             stmt.setInt(6, producto.getInventarioDisponible());
-            stmt.setInt(7, producto.getVendedor().getId());
+            stmt.setString(7, producto.getVendedor().getNombreUsuario());
             stmt.executeUpdate();
         }
     }
@@ -38,19 +38,10 @@ public class DAOProducto {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                String nombre = rs.getString("nombre");
-                String categoria = rs.getString("categoria");
-                double precio = rs.getDouble("precio");
-                double peso = rs.getDouble("peso");
-                String dimensiones = rs.getString("dimensiones");
-                int inventarioDisponible = rs.getInt("inventarioDisponible");
-                int vendedorId = rs.getInt("vendedor_id");
-
-                // Obtener el vendedor asociado al producto
-                Vendedor vendedor = obtenerVendedorPorId(vendedorId);
-
-                Producto producto = new Producto(nombre, categoria, precio, peso, dimensiones, inventarioDisponible, vendedor);
-                productos.add(producto);
+                Producto producto = crearProductoDesdeResultSet(rs);
+                if (producto != null) {
+                    productos.add(producto);
+                }
             }
         }
         return productos;
@@ -64,16 +55,7 @@ public class DAOProducto {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                String categoria = rs.getString("categoria");
-                double precio = rs.getDouble("precio");
-                double peso = rs.getDouble("peso");
-                String dimensiones = rs.getString("dimensiones");
-                int inventarioDisponible = rs.getInt("inventarioDisponible");
-                int vendedorId = rs.getInt("vendedor_id");
-
-                Vendedor vendedor = obtenerVendedorPorId(vendedorId);
-
-                return new Producto(nombre, categoria, precio, peso, dimensiones, inventarioDisponible, vendedor);
+                return crearProductoDesdeResultSet(rs);
             }
             return null; // Producto no encontrado
         }
@@ -89,27 +71,41 @@ public class DAOProducto {
         }
     }
 
-    // Obtener el vendedor por ID
-    private Vendedor obtenerVendedorPorId(int vendedorId) throws SQLException {
-        String sql = "SELECT * FROM usuarios WHERE id = ? AND rol = 'Vendedor'";
+    // Obtener productos de un vendedor específico (que tengan inventario)
+    public List<Producto> obtenerProductosPorVendedor(String nombreUsuarioVendedor) throws SQLException {
+        List<Producto> productos = new ArrayList<>();
+        String sql = "SELECT * FROM productos WHERE nombreUsuarioVendedor = ? AND inventarioDisponible > 0";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, vendedorId);
+            stmt.setString(1, nombreUsuarioVendedor);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                String nombreUsuario = rs.getString("nombreUsuario");
-                String nombreCompleto = rs.getString("nombreCompleto");
-                String cedula = rs.getString("cedulaIdentidad");
-                String nacimiento = rs.getString("fechaNacimiento");
-                String correo = rs.getString("correoElectronico");
-                String password = rs.getString("password");
-
-                return new Vendedor(nombreUsuario, nombreCompleto, cedula, nacimiento, correo, password);
+            while (rs.next()) {
+                Producto producto = crearProductoDesdeResultSet(rs);
+                if (producto != null) {
+                    productos.add(producto);
+                }
             }
-            return null;
         }
+        return productos;
     }
 
+    // Método privado para construir un producto a partir de un ResultSet
+    private Producto crearProductoDesdeResultSet(ResultSet rs) throws SQLException {
+        String nombre = rs.getString("nombre");
+        String categoria = rs.getString("categoria");
+        double precio = rs.getDouble("precio");
+        double peso = rs.getDouble("peso");
+        String dimensiones = rs.getString("dimensiones");
+        int inventarioDisponible = rs.getInt("inventarioDisponible");
+        String nombreUsuarioVendedor = rs.getString("nombreUsuarioVendedor");
+
+        // Crear el vendedor asociado (solo con el nombre de usuario, lo demás podría ser null)
+        Vendedor vendedor = new Vendedor(nombreUsuarioVendedor, null, null, null, null, null);
+
+        return new Producto(nombre, categoria, precio, peso, dimensiones, inventarioDisponible, vendedor);
+    }
+
+    // Cerrar la conexión
     public void cerrarConexion() throws SQLException {
         if (conn != null && !conn.isClosed()) {
             conn.close();

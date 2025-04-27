@@ -50,5 +50,16 @@ public class MenuAdministrador extends JFrame {
                 verPedidos.setVisible(true);
             }
         });
+
+        JButton btnCerrar = new JButton("Cerrar Sesión");
+        btnCerrar.setBounds(100, 150, 200, 30);
+        add(btnCerrar);
+
+        btnCerrar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new LoginFrame(gestorProductos, gestorPedidos).setVisible(true);
+            }
+        });
     }
 }

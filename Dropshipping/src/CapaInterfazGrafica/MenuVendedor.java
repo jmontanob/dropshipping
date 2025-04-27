@@ -1,151 +1,130 @@
 package CapaInterfazGrafica;
 
-import CapaLogica.GestorPedidos;
-import CapaLogica.GestorProductos;
-import CapaLogica.Vendedor;
+import CapaLogica.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.List;
 
 /**
- * Menú para el vendedor.
+ * Menú para vendedores.
  */
 public class MenuVendedor extends JFrame {
 
     private GestorProductos gestorProductos;
     private GestorPedidos gestorPedidos;
-    private Vendedor vendedor;  // Vendedor autenticado
+    private Vendedor vendedorLogueado; // NUEVO: guardar el vendedor logueado
 
-    // Constructor modificado para aceptar los objetos GestorProductos, GestorPedidos y Vendedor
-    public MenuVendedor(GestorProductos gestorProductos, GestorPedidos gestorPedidos) {
+    private JTextArea textArea;
+
+    public MenuVendedor(GestorProductos gestorProductos, GestorPedidos gestorPedidos, Vendedor vendedorLogueado) {
         this.gestorProductos = gestorProductos;
         this.gestorPedidos = gestorPedidos;
-        this.vendedor = vendedor;  // Asignamos el vendedor actual
+        this.vendedorLogueado = vendedorLogueado;
 
         setTitle("Menú Vendedor");
-        setSize(400, 300);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(600, 400);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
 
-        JLabel label = new JLabel("Bienvenido " + "Vendedor", SwingConstants.CENTER);
-        label.setBounds(50, 20, 300, 30);
-        add(label);
+        JButton btnAgregarProducto = new JButton("Agregar Producto");
+        btnAgregarProducto.setBounds(20, 20, 180, 30);
+        add(btnAgregarProducto);
 
-        JButton btnListarPedidos = new JButton("Listar Pedidos");
-        btnListarPedidos.setBounds(100, 70, 200, 30);
-        add(btnListarPedidos);
+        JButton btnVerMisProductos = new JButton("Ver Mis Productos");
+        btnVerMisProductos.setBounds(20, 70, 180, 30);
+        add(btnVerMisProductos);
 
-        btnListarPedidos.addActionListener(new ActionListener() {
+        JButton btnCerrar = new JButton("Cerrar Sesión");
+        btnCerrar.setBounds(20, 120, 180, 30);
+        add(btnCerrar);
+
+        textArea = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setBounds(220, 20, 340, 300);
+        add(scrollPane);
+
+        // --- Listeners ---
+        btnAgregarProducto.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String resumen = gestorPedidos.obtenerResumenPedidos();
-                JOptionPane.showMessageDialog(null, resumen);
+                agregarProducto();
             }
         });
 
-        JButton btnVerPedidos = new JButton("Ver Pedidos");
-        btnVerPedidos.setBounds(100, 110, 200, 30);
-        add(btnVerPedidos);
-
-        btnVerPedidos.addActionListener(e -> {
-            VerPedidosFrame frame = new VerPedidosFrame(gestorPedidos);
-            frame.setVisible(true);
+        btnVerMisProductos.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mostrarMisProductos();
+            }
         });
 
-        // Botón para registrar un producto
-        JButton btnRegistrarProducto = new JButton("Registrar Producto");
-        btnRegistrarProducto.setBounds(100, 150, 200, 30);
-        add(btnRegistrarProducto);
-
-        // Acción al presionar el botón de registrar producto
-        btnRegistrarProducto.addActionListener(new ActionListener() {
+        btnCerrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Mostrar ventana de registro de producto
-                mostrarVentanaRegistroProducto();
+                dispose();
+                new LoginFrame(gestorProductos, gestorPedidos).setVisible(true);
             }
         });
     }
 
-    // Método para mostrar la ventana de registro de producto
-    private void mostrarVentanaRegistroProducto() {
-        // Crear el formulario para ingresar los datos del producto
-        JFrame ventanaRegistro = new JFrame("Registrar Producto");
-        ventanaRegistro.setSize(400, 300);
-        ventanaRegistro.setLayout(null);
-        ventanaRegistro.setLocationRelativeTo(null);
+    /**
+     * Abre un diálogo para agregar un nuevo producto.
+     */
+    private void agregarProducto() {
+        JTextField nombreField = new JTextField();
+        JTextField categoriaField = new JTextField();
+        JTextField precioField = new JTextField();
+        JTextField pesoField = new JTextField();
+        JTextField dimensionesField = new JTextField();
+        JTextField inventarioField = new JTextField();
 
-        JLabel lblNombre = new JLabel("Nombre:");
-        lblNombre.setBounds(20, 30, 100, 30);
-        ventanaRegistro.add(lblNombre);
+        Object[] campos = {
+                "Nombre:", nombreField,
+                "Categoría:", categoriaField,
+                "Precio:", precioField,
+                "Peso:", pesoField,
+                "Dimensiones:", dimensionesField,
+                "Inventario Disponible:", inventarioField
+        };
 
-        JTextField txtNombre = new JTextField();
-        txtNombre.setBounds(120, 30, 200, 30);
-        ventanaRegistro.add(txtNombre);
+        int opcion = JOptionPane.showConfirmDialog(this, campos, "Nuevo Producto", JOptionPane.OK_CANCEL_OPTION);
+        if (opcion == JOptionPane.OK_OPTION) {
+            try {
+                String nombre = nombreField.getText();
+                String categoria = categoriaField.getText();
+                double precio = Double.parseDouble(precioField.getText());
+                double peso = Double.parseDouble(pesoField.getText());
+                String dimensiones = dimensionesField.getText();
+                int inventario = Integer.parseInt(inventarioField.getText());
 
-        JLabel lblCategoria = new JLabel("Categoría:");
-        lblCategoria.setBounds(20, 70, 100, 30);
-        ventanaRegistro.add(lblCategoria);
+                gestorProductos.agregarProducto(nombre, categoria, precio, peso, dimensiones, inventario, vendedorLogueado);
 
-        JTextField txtCategoria = new JTextField();
-        txtCategoria.setBounds(120, 70, 200, 30);
-        ventanaRegistro.add(txtCategoria);
+                JOptionPane.showMessageDialog(this, "Producto agregado exitosamente.");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Error en formato de número.");
+            }
+        }
+    }
 
-        JLabel lblPrecio = new JLabel("Precio:");
-        lblPrecio.setBounds(20, 110, 100, 30);
-        ventanaRegistro.add(lblPrecio);
+    /**
+     * Muestra en el área de texto solo los productos del vendedor logueado.
+     */
+    private void mostrarMisProductos() {
+        List<Producto> misProductos = gestorProductos.obtenerProductosPorVendedor(vendedorLogueado.getNombreUsuario());
 
-        JTextField txtPrecio = new JTextField();
-        txtPrecio.setBounds(120, 110, 200, 30);
-        ventanaRegistro.add(txtPrecio);
-
-        JLabel lblPeso = new JLabel("Peso:");
-        lblPeso.setBounds(20, 150, 100, 30);
-        ventanaRegistro.add(lblPeso);
-
-        JTextField txtPeso = new JTextField();
-        txtPeso.setBounds(120, 150, 200, 30);
-        ventanaRegistro.add(txtPeso);
-
-        JLabel lblDimensiones = new JLabel("Dimensiones:");
-        lblDimensiones.setBounds(20, 190, 100, 30);
-        ventanaRegistro.add(lblDimensiones);
-
-        JTextField txtDimensiones = new JTextField();
-        txtDimensiones.setBounds(120, 190, 200, 30);
-        ventanaRegistro.add(txtDimensiones);
-
-        JLabel lblInventario = new JLabel("Inventario:");
-        lblInventario.setBounds(20, 230, 100, 30);
-        ventanaRegistro.add(lblInventario);
-
-        JTextField txtInventario = new JTextField();
-        txtInventario.setBounds(120, 230, 200, 30);
-        ventanaRegistro.add(txtInventario);
-
-        // Botón para registrar el producto
-        JButton btnRegistrar = new JButton("Registrar");
-        btnRegistrar.setBounds(150, 270, 100, 30);
-        ventanaRegistro.add(btnRegistrar);
-
-        // Acción al presionar el botón de registrar
-        btnRegistrar.addActionListener(e -> {
-            String nombre = txtNombre.getText();
-            String categoria = txtCategoria.getText();
-            double precio = Double.parseDouble(txtPrecio.getText());
-            double peso = Double.parseDouble(txtPeso.getText());
-            String dimensiones = txtDimensiones.getText();
-            int inventario = Integer.parseInt(txtInventario.getText());
-
-            // Usamos el vendedor autenticado
-            // El vendedor es el que ha iniciado sesión en la aplicación
-
-            // Registrar el producto en el gestor
-            gestorProductos.agregarProducto(nombre, categoria, precio, peso, dimensiones, inventario, vendedor);
-
-            JOptionPane.showMessageDialog(null, "Producto registrado con éxito.");
-            ventanaRegistro.dispose(); // Cerrar la ventana después de registrar el producto
-        });
-
-        ventanaRegistro.setVisible(true);
+        textArea.setText("");
+        if (misProductos.isEmpty()) {
+            textArea.append("No tienes productos registrados.\n");
+        } else {
+            for (Producto p : misProductos) {
+                textArea.append(
+                        "Nombre: " + p.getNombre() + "\n" +
+                                "Categoría: " + p.getCategoria() + "\n" +
+                                "Precio: $" + p.getPrecio() + "\n" +
+                                "Peso: " + p.getPeso() + " kg\n" +
+                                "Dimensiones: " + p.getDimensiones() + "\n" +
+                                "Inventario Disponible: " + p.getInventarioDisponible() + "\n" +
+                                "------------------------------\n"
+                );
+            }
+        }
     }
 }

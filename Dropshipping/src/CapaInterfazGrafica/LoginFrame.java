@@ -18,6 +18,8 @@ public class LoginFrame extends JFrame {
     private GestorProductos gestorProductos;
     private GestorPedidos gestorPedidos;
 
+    private Usuario usuarioLogueado; // NUEVA VARIABLE
+
     public LoginFrame(GestorProductos gestorProductos, GestorPedidos gestorPedidos) {
         this.gestorProductos = gestorProductos;
         this.gestorPedidos = gestorPedidos;
@@ -74,6 +76,7 @@ public class LoginFrame extends JFrame {
                         String rolUsuario = daoUsuario.obtenerRolUsuario(user);
 
                         if (usuario.getPassword().equals(pass) && rolUsuario.equals(selectedRole)) {
+                            usuarioLogueado = usuario; // GUARDAR EL USUARIO
                             daoUsuario.cerrarConexion();
                             openMenu(rolUsuario);
                         } else {
@@ -105,7 +108,12 @@ public class LoginFrame extends JFrame {
                 new MenuAdministrador(gestorProductos, gestorPedidos).setVisible(true);
                 break;
             case "Vendedor":
-                new MenuVendedor(gestorProductos, gestorPedidos).setVisible(true);
+                // MANDAR TAMBIÉN EL VENDEDOR LOGUEADO
+                if (usuarioLogueado instanceof Vendedor) {
+                    new MenuVendedor(gestorProductos, gestorPedidos, (Vendedor) usuarioLogueado).setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: usuario no es un vendedor.");
+                }
                 break;
             case "Comprador":
                 new MenuComprador(gestorProductos, gestorPedidos).setVisible(true);

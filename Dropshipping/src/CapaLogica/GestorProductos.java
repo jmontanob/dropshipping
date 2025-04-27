@@ -39,4 +39,17 @@ public class GestorProductos {
         }
         return null;
     }
+
+    /**
+     * Devuelve todos los productos de un vendedor específico.
+     */
+    public List<Producto> obtenerProductosPorVendedor(String nombreUsuarioVendedor) {
+        List<Producto> productosDelVendedor = new ArrayList<>();
+        for (Producto p : productos) {
+            if (p.getVendedor().getNombreUsuario().equals(nombreUsuarioVendedor)) {
+                productosDelVendedor.add(p);
+            }
+        }
+        return productosDelVendedor;
+    }
 }
