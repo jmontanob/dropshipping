@@ -1,32 +1,27 @@
 package CapaLogica;
 
-import java.util.ArrayList;
+import CapaDAO.*;
+import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Controlador para pedidos.
- */
 public class GestorPedidos {
 
-    private List<Pedido> pedidos;
+    private DAOPedido daoPedido;
 
-    public GestorPedidos() {
-        pedidos = new ArrayList<>();
+    public GestorPedidos() throws SQLException {
+        this.daoPedido = new DAOPedido();
     }
 
-    public void agregarPedido(Pedido pedido) {
-        pedidos.add(pedido);
+    public void agregarPedido(Pedido pedido) throws SQLException {
+        daoPedido.guardarPedido(pedido);
     }
 
-    public List<Pedido> obtenerPedidos() {
-        return pedidos;
+    public List<Pedido> obtenerPedidosPorComprador(String nombreUsuario) throws SQLException {
+        return daoPedido.obtenerPedidosPorComprador(nombreUsuario);  // Aquí se pasa nombreUsuario como String
     }
 
-    public String obtenerResumenPedidos() {
-        StringBuilder sb = new StringBuilder();
-        for (Pedido p : pedidos) {
-            sb.append(p.toString()).append("\n");
-        }
-        return sb.toString();
+    // Método para obtener todos los pedidos
+    public List<Pedido> obtenerTodosLosPedidos() throws SQLException {
+        return daoPedido.obtenerTodosLosPedidos();  // Llamamos al método que obtendrá todos los pedidos
     }
 }

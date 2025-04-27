@@ -9,6 +9,7 @@ import CapaLogica.Comprador;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 /**
  * Ventana para crear un nuevo pedido como comprador.
@@ -143,7 +144,11 @@ public class CrearPedidoFrame extends JFrame {
                     JOptionPane.showMessageDialog(null, "El pedido está vacío.");
                     return;
                 }
-                gestorPedidos.agregarPedido(pedido);
+                try {
+                    gestorPedidos.agregarPedido(pedido);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 JOptionPane.showMessageDialog(null, "Pedido guardado exitosamente.");
                 dispose();
             }

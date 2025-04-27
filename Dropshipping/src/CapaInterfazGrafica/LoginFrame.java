@@ -116,7 +116,11 @@ public class LoginFrame extends JFrame {
                 }
                 break;
             case "Comprador":
-                new MenuComprador(gestorProductos, gestorPedidos).setVisible(true);
+                if (usuarioLogueado instanceof Comprador) {
+                    new MenuComprador(gestorProductos, gestorPedidos, (Comprador) usuarioLogueado).setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: usuario no es un comprador.");
+                }
                 break;
         }
         dispose();

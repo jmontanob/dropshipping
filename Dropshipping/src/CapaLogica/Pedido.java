@@ -33,6 +33,11 @@ public class Pedido {
     public List<Producto> getProductos() { return productos; }
     public double getTotal() { return total; }
 
+    // Método setTotal añadido
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
     @Override
     public String toString() {
         return "Pedido ID: " + idPedido + " - Cliente: " + cliente.getNombreCompleto() + " - Total: $" + total;

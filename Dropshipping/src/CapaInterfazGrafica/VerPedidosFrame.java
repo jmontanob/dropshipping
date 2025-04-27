@@ -1,8 +1,6 @@
 package CapaInterfazGrafica;
 
-import CapaLogica.GestorPedidos;
-import CapaLogica.Pedido;
-
+import CapaLogica.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,21 +44,26 @@ public class VerPedidosFrame extends JFrame {
             }
         });
 
-        mostrarPedidos(); // carga inicial
+        mostrarPedidos(); // Carga inicial
     }
 
     private void mostrarPedidos() {
-        List<Pedido> lista = gestorPedidos.obtenerPedidos();
-        StringBuilder sb = new StringBuilder();
+        try {
+            List<Pedido> lista = gestorPedidos.obtenerTodosLosPedidos(); // Llamada a obtener todos los pedidos
+            StringBuilder sb = new StringBuilder();
 
-        if (lista.isEmpty()) {
-            sb.append("No hay pedidos registrados.\n");
-        } else {
-            for (Pedido p : lista) {
-                sb.append(p.toString()).append("\n");
+            if (lista.isEmpty()) {
+                sb.append("No hay pedidos registrados.\n");
+            } else {
+                for (Pedido p : lista) {
+                    sb.append(p.toString()).append("\n");
+                }
             }
-        }
 
-        txtPedidos.setText(sb.toString());
+            txtPedidos.setText(sb.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar los pedidos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
